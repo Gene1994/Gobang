@@ -20,9 +20,11 @@ import javax.swing.JLabel;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
-public class WuziqiUI {
+public class Wuziqi {
 	
-	private static boolean Flag = true;//true白子，false黑子
+	private static int Flag = 0;//0空白，1白子，-1黑子
+	
+	int x,y;//行、列
 	
 	ImageIcon black = new ImageIcon("D:\\Java workspace\\Wuziqi\\res\\black.jpg");
 	ImageIcon white = new ImageIcon("D:\\Java workspace\\Wuziqi\\res\\white.jpg");
@@ -37,7 +39,7 @@ public class WuziqiUI {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					WuziqiUI window = new WuziqiUI();
+					Wuziqi window = new Wuziqi();
 					window.frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -49,21 +51,35 @@ public class WuziqiUI {
 	/**
 	 * Create the application.
 	 */
-	public WuziqiUI() {
+	public Wuziqi() {
 		initialize();
 	}
 	
 	//检查是否形成五子
-	public void check(){
-		WuziqiUI ui = new WuziqiUI();
+	public boolean check(JButton button){
+		Wuziqi ui = new Wuziqi();
+		return false;
 		
+	}
+	
+	//将JButton设置成五子棋
+	Wuziqi setWuziqi(JButton btn){
+		
+		if(Flag == 1){//如果之前是白子
+			
+		}else if(Flag == -1){//如果之前是黑子
+			
+		}else{//黑子先
+			
+		}
+		return null;
 	}
 
 	/**
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
-		white.setImage(white.getImage().getScaledInstance(15, 15, -1));
+		black.setImage(white.getImage().getScaledInstance(1, 1, -1));
 		frame = new JFrame();
 		frame.setBounds(100, 100, 441, 427);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -78,15 +94,15 @@ public class WuziqiUI {
 			}
 		});
 		button_11.setPreferredSize(new Dimension(20, 20));
+		
 		panel.add(button_11);
 		button_11.addMouseListener(new MouseAdapter(){
 			public void mouseClicked(MouseEvent e){
-				if(Flag == true){
-					
-				}
+				//x = button_11.getcol
+				setWuziqi(button_11);
 			}
 		});
-		button_11.setIcon(white);
+		button_11.setIcon(black);
 		
 		JButton button_15 = new JButton("");
 		button_15.setPreferredSize(new Dimension(20, 20));
