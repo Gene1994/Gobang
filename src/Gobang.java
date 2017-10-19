@@ -1,3 +1,10 @@
+/**
+ * @author Gene1994
+ * 
+ *
+ * ${tags}
+ */
+
 import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -18,20 +25,24 @@ import java.util.List;
 import java.awt.GridLayout;
 import java.awt.Image;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.Toolkit;
 
-public class Wuziqi {
+public class Gobang {
 	
 	private static int Flag = 0;//0空白，1白子，-1黑子
-	
+	//private static int index = 0;//判断是否构成五子棋条件，成立+1，达到4时，游戏结束
+	private static int Game = 0;//Game == 1时，游戏结束
 	int x,y;//行、列
 	
 	List<int[]> list_white = new ArrayList<int[]>();
 	List<int[]> list_black = new ArrayList<int[]>();
 	
-	ImageIcon black = new ImageIcon("D:\\Java workspace\\Wuziqi\\res\\black.jpg");
-	ImageIcon white = new ImageIcon("D:\\Java workspace\\Wuziqi\\res\\white.jpg");
+	ImageIcon black = new ImageIcon("..\\Gobang\\res\\black.jpg");
+	ImageIcon white = new ImageIcon("..\\Gobang\\res\\white.jpg");
 	
 	private JFrame frame;
 	
@@ -42,7 +53,7 @@ public class Wuziqi {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					Wuziqi window = new Wuziqi();
+					Gobang window = new Gobang();
 					window.frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -54,30 +65,31 @@ public class Wuziqi {
 	/**
 	 * Create the application.
 	 */
-	public Wuziqi() {
+	public Gobang() {
 		initialize();
 	}
 	
 	//检查水平
 	private boolean check_horizontal(List<int[]> list){
-		int index = 0;
 		if(list.size() > 4){
-			for(int i = 0; i < list.size()-4; i++){
-				for (int j = 0; j < 4; j++){
-					int[] node = list.get(i+j); 
+			
+			for(int i = 0; i < list.size() - 4; i++){
+				int index = 0;
+				int[] node = list.get(i);
+				for (int j = 0; j < list.size()-i-1; j++){
 					int[] node_next = list.get(i+j+1);
-					if(node[0] == node_next[0]+1 && node[1] == node_next[1]){
+					if((node[0]+1 == node_next[0] && node[1] == node_next[1]) ||(node[0]+2 == node_next[0] && node[1] == node_next[1]) || (node[0]+3 == node_next[0] && node[1] == node_next[1]) || (node[0]+4 == node_next[0] && node[1] == node_next[1])){
 						index += 1;
-					}else{
-						index = 0;
 					}
 					if(index == 4){
-						return true;
-					}else{
-						return false;
+						Game = 1;
 					}
 				}
-			}
+				if(Game == 1){
+					return true;
+				}
+
+			}	
 		}
 		return false;
 	}
@@ -85,52 +97,81 @@ public class Wuziqi {
 	//检查垂直
 	private boolean check_vertical(List<int[]> list){
 		if(list.size() > 4){
-			int index = 0;
-			for(int i = 0; i < list.size()-4; i++){
-				int[] node = list.get(i); 
-				for (int j = 0; j < list.size()-4-i; j++){
-					int[] node_next = list.get(i+j);
-					if((node[0] == node_next[0] && node[1] == node_next[1]+1) ||(node[0] == node_next[0] && node[1] == node_next[1]+2) || (node[0] == node_next[0] && node[1] == node_next[1]+3) || (node[0] == node_next[0] && node[1] == node_next[1]+4)){
+			
+			for(int i = 0; i < list.size() - 4; i++){
+				int index = 0;
+				int[] node = list.get(i);
+				for (int j = 0; j < list.size()-i-1; j++){
+					int[] node_next = list.get(i+j+1);
+					if((node[0] == node_next[0] && node[1]+1 == node_next[1]) ||(node[0] == node_next[0] && node[1]+2 == node_next[1]) || (node[0] == node_next[0] && node[1]+3 == node_next[1]) || (node[0] == node_next[0] && node[1]+4 == node_next[1])){
 						index += 1;
 					}
+					if(index == 4){
+						Game = 1;
+					}
 				}
-				if(index == 4){
+				if(Game == 1){
 					return true;
-				}else{
-					index = 0;
-					return false;
 				}
-			}
+
+			}	
 		}
 		return false;
 	}
 	
-	//检查对角线方向
-	private boolean check_diagonal(List<int[]> list){
+	//检查右斜下
+	private boolean check_lowerRight(List<int[]> list){
 		if(list.size() > 4){
-			int index = 0;
-			for(int i = 0; i < list.size()-4; i++){
-				int[] node = list.get(i); 
-				for (int j = 0; j < list.size()-4-i; j++){
-					int[] node_next = list.get(i+j);
-					if((node[0] == node_next[0]+1 && node[1] == node_next[1]+1) ||(node[0] == node_next[0]+2 && node[1] == node_next[1]+2) || (node[0] == node_next[0]+3 && node[1] == node_next[1]+3) || (node[0] == node_next[0]+4 && node[1] == node_next[1]+4)){
+			
+			for(int i = 0; i < list.size() - 4; i++){
+				int index = 0;
+				int[] node = list.get(i);
+				for (int j = 0; j < list.size()-i-1; j++){
+					int[] node_next = list.get(i+j+1);
+					if((node[0]+1 == node_next[0] && node[1]+1 == node_next[1]) ||(node[0]+2 == node_next[0] && node[1]+2 == node_next[1]) || (node[0]+3 == node_next[0] && node[1]+3 == node_next[1]) || (node[0]+4 == node_next[0] && node[1]+4 == node_next[1])){
 						index += 1;
 					}
+					if(index == 4){
+						Game = 1;
+					}
 				}
-				if(index == 4){
+				if(Game == 1){
 					return true;
-				}else{
-					index = 0;
-					return false;
 				}
-			}
+
+			}	
 		}
 		return false;
 	}
+	
+	//检查左斜下
+	private boolean check_lowerLeft(List<int[]> list){
+		if(list.size() > 4){
+			
+			for(int i = 0; i < list.size() - 4; i++){
+				int index = 0;
+				int[] node = list.get(i);
+				for (int j = 0; j < list.size()-i-1; j++){
+					int[] node_next = list.get(i+j+1);
+					if((node[0]-1 == node_next[0] && node[1]+1 == node_next[1]) ||(node[0]-2 == node_next[0] && node[1]+2 == node_next[1]) || (node[0]-3 == node_next[0] && node[1]+3 == node_next[1]) || (node[0] == node_next[0]-4 && node[1]+4 == node_next[1])){
+						index += 1;
+					}
+					if(index == 4){
+						Game = 1;
+					}
+				}
+				if(Game == 1){
+					return true;
+				}
+
+			}	
+		}
+		return false;
+	}
+
 	//检查是否形成五子
 	public boolean check(List<int[]> list){
-		if(check_horizontal(list) || check_vertical(list) || check_diagonal(list)){
-			System.out.println("Game Over!");
+		if(check_horizontal(list) || check_vertical(list) || check_lowerRight(list) || check_lowerLeft(list)){
 			return true;
 		}else{
 			return false;
@@ -146,6 +187,8 @@ public class Wuziqi {
 		black.setImage(black.getImage().getScaledInstance(20, 20, -1));
 		white.setImage(white.getImage().getScaledInstance(20, 20, -1));
 		frame = new JFrame();
+		frame.setTitle("\u4E94\u5B50\u68CB");
+		frame.setIconImage(Toolkit.getDefaultToolkit().getImage("..\\Gobang\\res\\icon.jpg"));
 		frame.setBounds(100, 100, 441, 427);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
@@ -165,16 +208,22 @@ public class Wuziqi {
 			panel.add(btn);
 			btn.addMouseListener(new MouseAdapter(){
 				public void mouseClicked(MouseEvent e){
-					System.out.println(btn.getName());
 					//click事件：改变button的icon，new一个五子棋
 					if(Flag == 1){//如果之前是白子
 						btn.setIcon(black);
-						Wuziqi w = new Wuziqi();
+						Gobang w = new Gobang();
 						Flag = -1;
-						w.x = Integer.parseInt(btn.getName()) % 15;
+						if(Integer.parseInt(btn.getName()) % 15 != 0){
+							w.x = Integer.parseInt(btn.getName()) % 15;
+						}else{
+							w.x = 15;
+						}
 						w.y = (Integer.parseInt(btn.getName())-1) / 15 + 1;
-						int[] i = {w.x, w.y};
+						int[] i = new int[2];
+						i[0] = w.x;
+						i[1] = w.y;
 						list_black.add(i);
+						
 						Collections.sort(list_black, new Comparator<int[]>(){
 							@Override
 							public int compare(int[] arg0, int[] arg1) {
@@ -190,15 +239,24 @@ public class Wuziqi {
 								}
 							}
 						});
-						check(list_black);
+						if(check(list_black)){
+							JOptionPane.showMessageDialog(null, "黑子获胜！");
+						}
 					}else if(Flag == -1){//如果之前是黑子
 						btn.setIcon(white);
-						Wuziqi w = new Wuziqi();
-						Flag = 1;
-						w.x = Integer.parseInt(btn.getName()) % 15;
+						Gobang w = new Gobang();
+						Flag = -1;
+						if(Integer.parseInt(btn.getName()) % 15 != 0){
+							w.x = Integer.parseInt(btn.getName()) % 15;
+						}else{
+							w.x = 15;
+						}
 						w.y = (Integer.parseInt(btn.getName())-1) / 15 + 1;
-						int[] i = {w.x, w.y};
+						int[] i = new int[2];
+						i[0] = w.x;
+						i[1] = w.y;
 						list_white.add(i);
+						
 						Collections.sort(list_white, new Comparator<int[]>(){
 							@Override
 							public int compare(int[] arg0, int[] arg1) {
@@ -214,14 +272,22 @@ public class Wuziqi {
 								}
 							}
 						});
-						check(list_white);
+						if(check(list_white)){
+							JOptionPane.showMessageDialog(null, "白子获胜！");
+						}
 					}else{//黑子先
 						btn.setIcon(black);
-						Wuziqi w = new Wuziqi();
+						Gobang w = new Gobang();
 						Flag = -1;
-						w.x = Integer.parseInt(btn.getName()) % 15;
+						if(Integer.parseInt(btn.getName()) % 15 != 0){
+							w.x = Integer.parseInt(btn.getName()) % 15;
+						}else{
+							w.x = 15;
+						}
 						w.y = (Integer.parseInt(btn.getName())-1) / 15 + 1;
-						int[] i = {w.x, w.y};
+						int[] i = new int[2];
+						i[0] = w.x;
+						i[1] = w.y;
 						list_black.add(i);
 					}
 				}
