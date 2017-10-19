@@ -10,12 +10,8 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import javax.swing.JTable;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import java.awt.GridBagLayout;
-import java.awt.GridBagConstraints;
-import java.awt.Insets;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
@@ -23,10 +19,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.awt.GridLayout;
-import java.awt.Image;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.Toolkit;
@@ -34,7 +27,6 @@ import java.awt.Toolkit;
 public class Gobang {
 	
 	private static int Flag = 0;//0空白，1白子，-1黑子
-	//private static int index = 0;//判断是否构成五子棋条件，成立+1，达到4时，游戏结束
 	private static int Game = 0;//Game == 1时，游戏结束
 	int x,y;//行、列
 	
