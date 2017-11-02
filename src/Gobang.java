@@ -24,10 +24,11 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.Toolkit;
 
-public class Gobang {
+public class Gobang{
 	
 	private static int Flag = 0;//0空白，1白子，-1黑子
 	private static int Game = 0;//Game == 1时，游戏结束
+
 	int x,y;//行、列
 	
 	List<int[]> list_white = new ArrayList<int[]>();
@@ -64,7 +65,6 @@ public class Gobang {
 	//检查水平
 	private boolean check_horizontal(List<int[]> list){
 		if(list.size() > 4){
-			
 			for(int i = 0; i < list.size() - 4; i++){
 				int index = 0;
 				int[] node = list.get(i);
@@ -73,6 +73,7 @@ public class Gobang {
 					if((node[0]+1 == node_next[0] && node[1] == node_next[1]) ||(node[0]+2 == node_next[0] && node[1] == node_next[1]) || (node[0]+3 == node_next[0] && node[1] == node_next[1]) || (node[0]+4 == node_next[0] && node[1] == node_next[1])){
 						index += 1;
 					}
+					//连成五子
 					if(index == 4){
 						Game = 1;
 					}
@@ -80,7 +81,6 @@ public class Gobang {
 				if(Game == 1){
 					return true;
 				}
-
 			}	
 		}
 		return false;
@@ -89,7 +89,6 @@ public class Gobang {
 	//检查垂直
 	private boolean check_vertical(List<int[]> list){
 		if(list.size() > 4){
-			
 			for(int i = 0; i < list.size() - 4; i++){
 				int index = 0;
 				int[] node = list.get(i);
@@ -98,6 +97,7 @@ public class Gobang {
 					if((node[0] == node_next[0] && node[1]+1 == node_next[1]) ||(node[0] == node_next[0] && node[1]+2 == node_next[1]) || (node[0] == node_next[0] && node[1]+3 == node_next[1]) || (node[0] == node_next[0] && node[1]+4 == node_next[1])){
 						index += 1;
 					}
+					//连成五子
 					if(index == 4){
 						Game = 1;
 					}
@@ -105,16 +105,14 @@ public class Gobang {
 				if(Game == 1){
 					return true;
 				}
-
 			}	
 		}
 		return false;
 	}
 	
-	//检查右斜下
+	//检查右下方向
 	private boolean check_lowerRight(List<int[]> list){
 		if(list.size() > 4){
-			
 			for(int i = 0; i < list.size() - 4; i++){
 				int index = 0;
 				int[] node = list.get(i);
@@ -130,16 +128,14 @@ public class Gobang {
 				if(Game == 1){
 					return true;
 				}
-
 			}	
 		}
 		return false;
 	}
 	
-	//检查左斜下
+	//检查左下方向
 	private boolean check_lowerLeft(List<int[]> list){
 		if(list.size() > 4){
-			
 			for(int i = 0; i < list.size() - 4; i++){
 				int index = 0;
 				int[] node = list.get(i);
@@ -155,7 +151,6 @@ public class Gobang {
 				if(Game == 1){
 					return true;
 				}
-
 			}	
 		}
 		return false;
@@ -170,8 +165,6 @@ public class Gobang {
 		}
 	}
 	
-
-
 	/**
 	 * Initialize the contents of the frame.
 	 */
@@ -188,34 +181,38 @@ public class Gobang {
 		frame.getContentPane().add(panel, BorderLayout.CENTER);
 		panel.setLayout(new GridLayout(0, 15, 0, 0));
 		
-		for (int i = 1; i <= 225; i++){
-			JButton btn = new JButton("");
+		//建立15*15棋盘
+		for(int i = 1; i <= 225; i++){
+			JButton btn = new JButton();
 			btn.setName(i+"");
-			btn.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent arg0) {
-				}
-			});
 			btn.setPreferredSize(new Dimension(20, 20));
-			
 			panel.add(btn);
+			
+//			btn.addActionListener(new ActionListener() {
+//				public void actionPerformed(ActionEvent arg0) {
+//				}
+//			});
 			btn.addMouseListener(new MouseAdapter(){
 				public void mouseClicked(MouseEvent e){
 					//click事件：改变button的icon，new一个五子棋
-					if(Flag == 1){//如果之前是白子
+					if(Flag == 1 && btn.getIcon() == null){//如果之前是白子
 						btn.setIcon(black);
-						Gobang w = new Gobang();
+						Gobang goBang = new Gobang();
 						Flag = -1;
+						//如果不是在最右侧，取15的余数作为x洲坐标，在最右边取15位x轴坐标
 						if(Integer.parseInt(btn.getName()) % 15 != 0){
-							w.x = Integer.parseInt(btn.getName()) % 15;
+							goBang.x = Integer.parseInt(btn.getName()) % 15;
 						}else{
-							w.x = 15;
+							goBang.x = 15;
 						}
-						w.y = (Integer.parseInt(btn.getName())-1) / 15 + 1;
+						//除以15后+1作为y轴坐标
+						goBang.y = (Integer.parseInt(btn.getName())-1) / 15 + 1;
 						int[] i = new int[2];
-						i[0] = w.x;
-						i[1] = w.y;
+						i[0] = goBang.x;
+						i[1] = goBang.y;
 						list_black.add(i);
 						
+						//检查过程，先将list_black排序，然后调用check(list_black)方法
 						Collections.sort(list_black, new Comparator<int[]>(){
 							@Override
 							public int compare(int[] arg0, int[] arg1) {
@@ -233,20 +230,21 @@ public class Gobang {
 						});
 						if(check(list_black)){
 							JOptionPane.showMessageDialog(null, "黑子获胜！");
+							frame.setVisible(false);
 						}
-					}else if(Flag == -1){//如果之前是黑子
+					}else if(Flag == -1 && btn.getIcon() == null){//如果之前是黑子
 						btn.setIcon(white);
-						Gobang w = new Gobang();
-						Flag = -1;
+						Gobang goBang = new Gobang();
+						Flag = 1;
 						if(Integer.parseInt(btn.getName()) % 15 != 0){
-							w.x = Integer.parseInt(btn.getName()) % 15;
+							goBang.x = Integer.parseInt(btn.getName()) % 15;
 						}else{
-							w.x = 15;
+							goBang.x = 15;
 						}
-						w.y = (Integer.parseInt(btn.getName())-1) / 15 + 1;
+						goBang.y = (Integer.parseInt(btn.getName())-1) / 15 + 1;
 						int[] i = new int[2];
-						i[0] = w.x;
-						i[1] = w.y;
+						i[0] = goBang.x;
+						i[1] = goBang.y;
 						list_white.add(i);
 						
 						Collections.sort(list_white, new Comparator<int[]>(){
@@ -266,24 +264,28 @@ public class Gobang {
 						});
 						if(check(list_white)){
 							JOptionPane.showMessageDialog(null, "白子获胜！");
+							frame.setVisible(false);
 						}
-					}else{//黑子先
+					}else if (btn.getIcon() == null){//空白，Flag = 0，黑子先
 						btn.setIcon(black);
-						Gobang w = new Gobang();
+						Gobang goBang = new Gobang();
 						Flag = -1;
 						if(Integer.parseInt(btn.getName()) % 15 != 0){
-							w.x = Integer.parseInt(btn.getName()) % 15;
+							goBang.x = Integer.parseInt(btn.getName()) % 15;
 						}else{
-							w.x = 15;
+							goBang.x = 15;
 						}
-						w.y = (Integer.parseInt(btn.getName())-1) / 15 + 1;
+						goBang.y = (Integer.parseInt(btn.getName())-1) / 15 + 1;
 						int[] i = new int[2];
-						i[0] = w.x;
-						i[1] = w.y;
+						i[0] = goBang.x;
+						i[1] = goBang.y;
 						list_black.add(i);
-					}
+					}else{}
 				}
 			});
+			while(btn.getIcon() != null){
+				btn.setEnabled(false);
+			}
 		}
 	}
 }
