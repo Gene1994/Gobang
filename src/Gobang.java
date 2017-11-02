@@ -20,8 +20,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.awt.GridLayout;
 import javax.swing.JOptionPane;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 import java.awt.Toolkit;
 
 public class Gobang{
