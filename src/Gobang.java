@@ -9,6 +9,7 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -184,6 +185,7 @@ public class Gobang{
 			JButton btn = new JButton();
 			btn.setName(i+"");
 			btn.setPreferredSize(new Dimension(20, 20));
+			btn.setBackground(Color.ORANGE);
 			panel.add(btn);
 			
 //			btn.addActionListener(new ActionListener() {
